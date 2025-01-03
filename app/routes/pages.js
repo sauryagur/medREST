@@ -1,5 +1,11 @@
 const data = require("../data/integer_memory_store.js")
 
+const { createClient } = require('@supabase/supabase-js');
+
+// Create a single supabase client for interacting with your database
+const supabase = createClient(`${process.env.SUPABASE_URL}`, `${process.env.SUPABASE_ANON_KEY}`);
+
+
 class Pages {
   constructor(express, next) {
     this.express = express
@@ -34,7 +40,7 @@ class Pages {
     })
 
     this.express.get('/appointments', (req, res) => {
-      return.this.next.render(req, res, `/appointments`, data)
+      res.sendStatus(200);
     })
   }
 
