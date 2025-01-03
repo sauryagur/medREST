@@ -1,4 +1,4 @@
-import {createClient} from '@supabase/supabase-js'
+import {createClient} from 's'
 
 const supabaseUrl = 'https://cyrokafeqtyphlvgdpbp.supabase.co'
 const supabaseKey = process.env.SUPABASE_KEY

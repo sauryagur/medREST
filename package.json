@@ -7,13 +7,15 @@
   "author": "alexey-dc <alexey.opensource@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
     "body-parser": "^1.20.0",
     "dotenv": "16.0.1",
     "express": "^4.18.1",
     "next": "12.1.5",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "supabase": "^2.2.1"
   },
   "scripts": {
     "build": "next build",
