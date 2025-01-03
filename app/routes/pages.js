@@ -39,8 +39,11 @@ class Pages {
       }
     })
 
-    this.express.get('/appointments', (req, res) => {
-      res.sendStatus(200);
+    this.express.get('/appointments', async (req, res) => {
+      let bingbong = await supabase
+          .from('inventory')
+          .select('*')
+      res.json(bingbong);
     })
   }
 

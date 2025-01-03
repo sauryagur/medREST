@@ -1,10 +1,10 @@
 {
-  "name": "nextjs_express_template",
+  "name": "medREST-backend",
   "version": "1.0.0",
-  "description": "Template for a NextJS+ExpressJS web app",
+  "description": "Made by Team Works On My Machine (previously Team Kashti)",
   "main": "index.js",
-  "repository": "git@github.com:alexey-dc/nextjs_express_template.git",
-  "author": "alexey-dc <alexey.opensource@gmail.com>",
+  "repository": "git@github.com:sauryagur/medREST-backend.git",
+  "author": "Saurya Gur <saurya.gur@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "@supabase/supabase-js": "^2.47.10",
