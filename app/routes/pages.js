@@ -32,6 +32,10 @@ class Pages {
         return this.next.render(req, res, `/special_large`, req.query)
       }
     })
+
+    this.express.get('/appointments', (req, res) => {
+      return.this.next.render(req, res, `/appointments`, data)
+    })
   }
 
   initDefaultPages() {
