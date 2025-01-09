@@ -239,23 +239,44 @@
                                 </thead>
                                 <tbody>
                                 <% if (locals.appointments) { %>
-                                <% appointments.forEach((patient) => { %>
-                                    <tr>
-                                        <td style="display: flex;align-items: center;">
-                                            <div class="rounded-circle me-2"
-                                                 style="width: 30px;height: 30px;background: #c41e3a;"></div>
-                                            <span>Patient</span>
-                                        </td>
-                                        <td>AVEC1</td>
-                                        <td>Male</td>
-                                        <td>Old</td>
-                                        <td>Complete</td>
-                                        <td>Dr SLG</td>
-                                        <td>now</td>
-                                        <td>complete</td>
-                                    </tr>
-                                <% }); %>
-                                <% } %>
+                                    <% appointments.forEach((patient) => { %>
+                                        <tr>
+                                            <td style="display: flex;align-items: center;">
+                                                <div class="rounded-circle me-2" id="<%= patient["Patient ID"] %>"
+                                                     style="width: 30px;height: 30px;background: white;"></div>
+                                                <span><%= patient["Name"] %></span>
+                                            </td>
+                                            <td><%= patient["Patient ID"] %></td>
+                                            <td><%= patient["Gender"] %></td>
+                                            <td><%= patient["Old/New"] %></td>
+                                            <td><%= patient["Payment"] %></td>
+                                            <td><%= patient["Doctor Name"] %></td>
+                                            <td><%= patient["Time"] %></td>
+                                            <td><%= patient["Status"] %></td>
+                                        </tr>
+                                    <% }); %>
+                                    <script>
+                                        const allCircles = document.querySelectorAll("tr > td > div");
+                                        const appointments = <%- JSON.stringify(appointments) %>;
+                                        allCircles.forEach((circle) => {
+                                            console.log(circle.id);
+                                            const patient = appointments.find((patient) => patient["Patient ID"] === circle.id);
+                                            console.log(patient["Status"]);
+                                            if (patient["Status"] === "In-Progress") {
+                                                circle.style.backgroundColor = "orange";
+                                            } else if (patient["Status"] === "Workup") {
+                                                circle.style.backgroundColor = "yellow";
+                                            } else if (patient["Status"] === "Waiting") {
+                                                circle.style.backgroundColor = "#c41e3a";
+                                            } else if (patient["Status"] === "Discharged") {
+                                                circle.style.backgroundColor = "green";
+                                            } else if (patient["Status"] === "Arrived") {
+                                                circle.style.backgroundColor = "blue";
+                                            }
+                                        });
+
+                                    </script>
+                                <% }; %>
                                 <tr></tr>
                                 </tbody>
                                 <tfoot>
