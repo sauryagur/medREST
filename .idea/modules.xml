@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/medREST-backend.iml" filepath="$PROJECT_DIR$/.idea/medREST-backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/medrest4.iml" filepath="$PROJECT_DIR$/.idea/medrest4.iml" />
     </modules>
   </component>
 </project>

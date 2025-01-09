@@ -1,24 +1,24 @@
 {
-  "name": "medREST-backend",
+  "name": "medREST",
   "version": "1.0.0",
-  "description": "Made by Team Works On My Machine (previously Team Kashti)",
+  "description": "This is the fourth version of the backend goddamnit",
   "main": "index.js",
-  "repository": "git@github.com:sauryagur/medREST-backend.git",
-  "author": "Saurya Gur <saurya.gur@gmail.com>",
-  "license": "MIT",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.47.10",
-    "body-parser": "^1.20.0",
-    "dotenv": "16.0.1",
-    "express": "^4.18.1",
-    "next": "12.1.5",
-    "react": "18.1.0",
-    "react-dom": "18.1.0",
-    "serve-favicon": "^2.5.0",
-    "supabase": "^2.2.1"
-  },
+  "type": "module",
   "scripts": {
-    "build": "next build",
-    "start": "node index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "passport": "^0.7.0",
+    "passport-local": "^1.0.0",
+    "pg": "^8.11.3"
   }
 }

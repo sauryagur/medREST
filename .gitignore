@@ -1,5 +1,2 @@
-.DS_Store
-.env
-.next
 node_modules
-mkcert
+.env

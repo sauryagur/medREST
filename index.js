@@ -1,9 +1,31 @@
-require("dotenv").config()
-const Server = require("./app/server")
+import express from "express";
+import bodyParser from "body-parser";
+import pg from "pg";
+import bcrypt from "bcrypt";
+import passport from "passport";
+import { Strategy } from "passport-local";
+import session from "express-session";
+import env from "dotenv";
 
-const begin = async () => {
-  await new Server(process.env.EXPRESS_PORT).start()
-  console.log(`Server running in --- ${process.env.NODE_ENV} --- on port ${process.env.EXPRESS_PORT}`)
-}
+import {appointments} from "./data.js";
 
-begin()
+
+const app = express();
+const port = 3000;
+const saltRounds = 10;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+    res.render("index.ejs");
+})
+
+app.get("/appointments", (req, res) => {
+    res.render("opd.ejs", {appointments: appointments});
+})
+
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+    console.log(appointments);
+});
