@@ -263,15 +263,15 @@
                                             const patient = appointments.find((patient) => patient["Patient ID"] === circle.id);
                                             console.log(patient["Status"]);
                                             if (patient["Status"] === "In-Progress") {
-                                                circle.style.backgroundColor = "orange";
+                                                circle.style.backgroundColor = "#FFC470";
                                             } else if (patient["Status"] === "Workup") {
-                                                circle.style.backgroundColor = "yellow";
+                                                circle.style.backgroundColor = "#4793AF";
                                             } else if (patient["Status"] === "Waiting") {
-                                                circle.style.backgroundColor = "#c41e3a";
+                                                circle.style.backgroundColor = "#DD5746";
                                             } else if (patient["Status"] === "Discharged") {
                                                 circle.style.backgroundColor = "green";
                                             } else if (patient["Status"] === "Arrived") {
-                                                circle.style.backgroundColor = "blue";
+                                                circle.style.backgroundColor = "gray";
                                             }
                                         });
 
