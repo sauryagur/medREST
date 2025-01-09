@@ -1,3 +1,5 @@
+//example data until database integration
+
 export let appointments = [
     {
         'Name': 'Arjun Sharma',
