@@ -19,6 +19,11 @@ app.get("/appointments", (req, res) => {
     res.render("opd.ejs", {appointments: appointments});
 });
 
+app.get("/new", (req, res) => {
+    res.render("newappointment.ejs");
+});
+
+
 app.get("/inventory", (req, res) => {
     res.render("inventory.ejs", {medicines: medicines});
 });
