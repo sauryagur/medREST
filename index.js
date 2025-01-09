@@ -1,15 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-import pg from "pg";
-import bcrypt from "bcrypt";
-import passport from "passport";
-import {Strategy} from "passport-local";
-import session from "express-session";
-import env from "dotenv";
 
-import {appointments} from "./data.js";
-import {beds} from "./data.js";
-import {medicines} from "./data.js";
+import {appointments, beds, medicines} from "./data.js";
 
 
 const app = express();
@@ -28,7 +20,7 @@ app.get("/appointments", (req, res) => {
 });
 
 app.get("/inventory", (req, res) => {
-    res.render("inventory.ejs");
+    res.render("inventory.ejs", {medicines: medicines});
 });
 
 app.get("/ipd", (req, res) => {
@@ -37,10 +29,6 @@ app.get("/ipd", (req, res) => {
 
 app.get("/staff", (req, res) => {
     res.send("UNDER CONSTRUCTION");
-});
-
-app.get("/inventory", (req, res) => {
-    res.render("inventory.ejs", {medicines: medicines});
 });
 
 app.get("/patients", (req, res) => {
