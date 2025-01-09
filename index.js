@@ -9,6 +9,7 @@ import env from "dotenv";
 
 import {appointments} from "./data.js";
 import {beds} from "./data.js";
+import {medicines} from "./data.js";
 
 
 const app = express();
@@ -33,6 +34,19 @@ app.get("/inventory", (req, res) => {
 app.get("/ipd", (req, res) => {
     res.render("ipd.ejs", {appointments: appointments});
 });
+
+app.get("/staff", (req, res) => {
+    res.send("UNDER CONSTRUCTION");
+});
+
+app.get("/inventory", (req, res) => {
+    res.render("inventory.ejs", {medicines: medicines});
+});
+
+app.get("/patients", (req, res) => {
+    res.send("UNDER CONSTRUCTION");
+});
+
 
 app.get("/beds", (req, res) => {
     res.render("bedallocation.ejs", {beds: beds});

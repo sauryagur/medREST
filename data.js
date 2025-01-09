@@ -225,3 +225,86 @@ export let beds = [
         patientid: null
     }
 ];
+
+export let medicines = [
+    {
+        id: 1,
+        name: 'Paracetamol',
+        batch_no: 'B1234',
+        expiry: '2025-12-31',
+        stock: 50,
+        purchase_quantity: 100
+    },
+    {
+        id: 2,
+        name: 'Ibuprofen',
+        batch_no: 'B5678',
+        expiry: '2024-05-15',
+        stock: 30,
+        purchase_quantity: 50
+    },
+    {
+        id: 3,
+        name: 'Amoxicillin',
+        batch_no: 'B9101',
+        expiry: '2024-10-20',
+        stock: 0,
+        purchase_quantity: 200
+    },
+    {
+        id: 4,
+        name: 'Cetirizine',
+        batch_no: 'B1121',
+        expiry: '2026-03-25',
+        stock: 100,
+        purchase_quantity: 150
+    },
+    {
+        id: 5,
+        name: 'Loratadine',
+        batch_no: 'B3141',
+        expiry: '2025-08-12',
+        stock: 50,
+        purchase_quantity: 100
+    },
+    {
+        id: 6,
+        name: 'Azithromycin',
+        batch_no: 'B5161',
+        expiry: '2024-11-30',
+        stock: 20,
+        purchase_quantity: 60
+    },
+    {
+        id: 7,
+        name: 'Metformin',
+        batch_no: 'B7181',
+        expiry: '2025-07-19',
+        stock: 0,
+        purchase_quantity: 80
+    },
+    {
+        id: 8,
+        name: 'Atorvastatin',
+        batch_no: 'B9201',
+        expiry: '2025-09-10',
+        stock: 25,
+        purchase_quantity: 40
+    },
+    {
+        id: 9,
+        name: 'Amlodipine',
+        batch_no: 'B1222',
+        expiry: '2023-12-15',
+        stock: 0,
+        purchase_quantity: 90
+    },
+    {
+        id: 10,
+        name: 'Omeprazole',
+        batch_no: 'B3242',
+        expiry: '2025-01-01',
+        stock: 75,
+        purchase_quantity: 120
+    }
+];
