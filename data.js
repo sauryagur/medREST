@@ -133,5 +133,95 @@ export let beds = [
         name: '105',
         status: 'Allotted',
         patientid: 3
+    },
+    {
+        id: 6,
+        name: '106',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 7,
+        name: '107',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 8,
+        name: '108',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 9,
+        name: '109',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 10,
+        name: '110',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 11,
+        name: '111',
+        status: 'Occupied',
+        patientid: 4
+    },
+    {
+        id: 12,
+        name: '112',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 13,
+        name: '113',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 14,
+        name: '114',
+        status: 'Cleaning',
+        patientid: null
+    },
+    {
+        id: 15,
+        name: '115',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 16,
+        name: '116',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 17,
+        name: '117',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 18,
+        name: '118',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 19,
+        name: '119',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 20,
+        name: '120',
+        status: 'Empty',
+        patientid: null
     }
 ];
