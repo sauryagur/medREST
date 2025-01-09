@@ -8,6 +8,7 @@ import session from "express-session";
 import env from "dotenv";
 
 import {appointments} from "./data.js";
+import {beds} from "./data.js";
 
 
 const app = express();
@@ -31,6 +32,10 @@ app.get("/inventory", (req, res) => {
 
 app.get("/ipd", (req, res) => {
     res.render("ipd.ejs", {appointments: appointments});
+});
+
+app.get("/beds", (req, res) => {
+    res.render("bedallocation.ejs", {beds: beds});
 });
 
 

@@ -100,3 +100,36 @@ export let appointments = [
         'Status': 'In-Progress'
     }
 ];
+
+export let beds = [
+    {
+        id: 1,
+        name: '101',
+        status: 'Occupied',
+        patientid: 1
+    },
+    {
+        id: 2,
+        name: '102',
+        status: 'Empty',
+        patientid: null
+    },
+    {
+        id: 3,
+        name: '103',
+        status: 'Occupied',
+        patientid: 2
+    },
+    {
+        id: 4,
+        name: '104',
+        status: 'Cleaning',
+        patientid: null
+    },
+    {
+        id: 5,
+        name: '105',
+        status: 'Allotted',
+        patientid: 3
+    }
+];
