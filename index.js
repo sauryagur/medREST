@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pkg from 'pg';
-import {appointments, beds, doctors, medicines} from "./data.js";
+import {beds, doctors, medicines} from "./data.js";
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -30,22 +30,23 @@ app.get("/", (req, res) => {
 // Fetch appointments from the database
 app.get('/appointments', async (req, res) => {
     try {
-        // Query to fetch data from patients and appointments tables
+        // Query to fetch data from patients and appointments tables, filtering for OPD department
         const query = `
-    SELECT 
-        p.patient_id AS "Patient ID", 
-        p.name AS "Name", 
-        p.gender AS "Gender", 
-        p.date_of_birth AS "Date of Birth", 
-        a.time_of_appointment AS "Time",
-        a.payment AS "Payment",
-        a.status AS "Status",
-        a.doctor_name AS "Doctor Name",
-        COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
-    FROM patients p
-    JOIN appointments a ON p.patient_id = a.patient_id
-    ORDER BY a.time_of_appointment DESC;
-`;
+        SELECT 
+            p.patient_id AS "Patient ID", 
+            p.name AS "Name", 
+            p.gender AS "Gender", 
+            p.date_of_birth AS "Date of Birth", 
+            a.time_of_appointment AS "Time",
+            a.payment AS "Payment",
+            a.status AS "Status",
+            a.doctor_name AS "Doctor Name",
+            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+        FROM patients p
+        JOIN appointments a ON p.patient_id = a.patient_id
+        WHERE a.department = 'OPD'  -- Filter for OPD department
+        ORDER BY a.time_of_appointment DESC;
+        `;
 
         // Execute the query to fetch appointments
         const result = await pool.query(query);
@@ -63,6 +64,7 @@ app.get('/appointments', async (req, res) => {
         res.status(500).send('Error fetching appointments');
     }
 });
+;
 
 
 // Render the page to create a new appointment
