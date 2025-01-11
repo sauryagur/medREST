@@ -201,30 +201,33 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <% if (locals.appointments) { %>
+                                <% if (appointments && appointments.length > 0) { %>
                                     <% appointments.forEach((appointment) => { %>
                                         <tr>
-                                            <td style="display: flex;align-items: center;">
-                                                <div class="rounded-circle me-2" id="<%= appointment.patient_id %>" style="width: 30px;height: 30px;background: white;"></div>
-                                                <span><a href="/patients/<%= appointment.patient_id %>" style="color: inherit"><%= appointment.name %></a></span>
+                                            <td style="display: flex; align-items: center;">
+                                                <div class="rounded-circle me-2" id="<%= appointment['Patient ID'] %>" style="width: 30px; height: 30px; background: white;"></div>
+                                                <span><a href="/patients/<%= appointment['Patient ID'] %>" style="color: inherit"><%= appointment.Name %></a></span>
                                             </td>
-                                            <td><%= appointment.patient_id %></td>
-                                            <td><%= appointment.gender %></td>
-                                            <td><%= appointment.old_new %></td>
-                                            <td><%= appointment.payment %></td>
-                                            <td><%= appointment.doctor_name %></td>
-                                            <td><%= appointment.time.slice(11,16) %></td>
-                                            <td><%= appointment.status %></td>
+                                            <td><%= appointment['Patient ID'] %></td>
+                                            <td><%= appointment.Gender %></td>
+                                            <td><%= appointment['Old/New'] %></td>
+                                            <td><%= appointment.Payment %></td>
+                                            <td><%= appointment['Doctor Name'] %></td>
+                                            <td><%= appointment.Time ? appointment.Time.slice(0, 5) : 'N/A' %></td>
+                                            <td><%= appointment.Status %></td>
                                         </tr>
                                     <% }); %>
+                                <% } else { %>
+                                    <tr><td colspan="8">No appointments found.</td></tr>
                                 <% } %>
                                 </tbody>
                                 <tfoot>
                                 <tr>
-                                    <td colspan="8">Showing 1 to 10 of 27</td>
+                                    <td colspan="8">Showing 1 to <%= appointments.length %> of <%= appointments.length %></td>
                                 </tr>
                                 </tfoot>
                             </table>
+
                         </div>
                         <div class="row">
                             <div class="col-md-6 align-self-center">

@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import {Pool} from 'pg';
+import pkg from 'pg';
 import {appointments, beds, doctors, medicines} from "./data.js";
 import dotenv from 'dotenv';
 
@@ -9,11 +9,11 @@ dotenv.config();
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+const {Pool} = pkg;
 
 // Initialize Supabase (PostgreSQL) connection pool
 const pool = new Pool({
-    connectionString: process.env.SUPABASE_DB_URL,
-    ssl: {
+    connectionString: process.env.SUPABASE_DB_URL, ssl: {
         rejectUnauthorized: false
     }
 });
@@ -32,35 +32,38 @@ app.get('/appointments', async (req, res) => {
     try {
         // Query to fetch data from patients and appointments tables
         const query = `
-            SELECT 
-                p.id AS "Patient ID", 
-                p.name AS "Name", 
-                p.gender AS "Gender", 
-                p.dob AS "Date of Birth", 
-                a.time_of_appointment AS "Time",
-                a.payment AS "Payment",
-                a.status AS "Status",
-                a.doctor_name AS "Doctor Name",
-                CASE 
-                    WHEN p.dob < CURRENT_DATE - INTERVAL '18 years' THEN 'Old'
-                    ELSE 'New'
-                END AS "Old/New"
-            FROM patients p
-            JOIN appointments a ON p.id = a.patient_id
-            ORDER BY a.time_of_appointment DESC;
-        `;
+    SELECT 
+        p.patient_id AS "Patient ID", 
+        p.name AS "Name", 
+        p.gender AS "Gender", 
+        p.date_of_birth AS "Date of Birth", 
+        a.time_of_appointment AS "Time",
+        a.payment AS "Payment",
+        a.status AS "Status",
+        a.doctor_name AS "Doctor Name",
+        COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+    FROM patients p
+    JOIN appointments a ON p.patient_id = a.patient_id
+    ORDER BY a.time_of_appointment DESC;
+`;
 
         // Execute the query to fetch appointments
         const result = await pool.query(query);
-        const appointmentsData = result.rows;
+        const appointments = result.rows;
+
+        // Add "Old/New" status based on the number of appointments
+        appointments.forEach(appointment => {
+            appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
+        });
 
         // Send the data to the EJS template
-        res.render('opd', {appointments: appointmentsData});
+        res.render('opd.ejs', {appointments});
     } catch (err) {
         console.error('Error fetching appointments:', err);
         res.status(500).send('Error fetching appointments');
     }
 });
+
 
 // Render the page to create a new appointment
 app.get("/new", (req, res) => {
@@ -93,8 +96,81 @@ app.get("/beds", (req, res) => {
 });
 
 // Handle the new appointment POST request
-app.post("/new", (req, res) => {
-    res.json(req.body);
+app.post("/new", async (req, res) => {
+    const {
+        name,
+        gender,
+        bloodGroup,
+        phone,
+        email,
+        emergencyContactName,
+        emergencyContactNumber,
+        dateOfBirth,
+        occupation,
+        address,
+        allergies,
+        currentMedication,
+        familyMedicalHistory,
+        pastMedicalHistory,
+        insuranceType,
+        referredBy,
+        doctorName,
+        dateOfAppointment,
+        timeOfAppointment
+    } = req.body;
+
+    try {
+        // Step 1: Check if the patient already exists in the database (using phone or email for uniqueness)
+        const checkPatientQuery = `
+            SELECT patient_id 
+            FROM patients 
+            WHERE phone = $1 OR email = $2;
+        `;
+        const patientResult = await supabase.query(checkPatientQuery, [phone, email]);
+
+        let patient_id;
+
+        if (patientResult.rows.length > 0) {
+            // Patient exists, use the existing patient_id
+            patient_id = patientResult.rows[0].patient_id;
+        } else {
+            // Step 2: If patient does not exist, insert a new patient into the database
+            const insertPatientQuery = `
+                INSERT INTO patients (name, gender, blood_group, phone, email, emergency_contact_name, emergency_contact_number,
+                                      date_of_birth, occupation, address, allergies, current_medication, family_medical_history,
+                                      past_medical_history, insurance_type, referred_by)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                RETURNING patient_id;
+            `;
+            const insertPatientResult = await supabase.query(insertPatientQuery, [
+                name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber,
+                dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory,
+                pastMedicalHistory, insuranceType, referredBy
+            ]);
+
+            patient_id = insertPatientResult.rows[0].patient_id;
+        }
+
+        // Step 3: Insert the new appointment into the appointments table
+        const insertAppointmentQuery = `
+            INSERT INTO appointments (patient_id, doctor_name, date_of_appointment, time_of_appointment, payment, status)
+            VALUES ($1, $2, $3, $4, $5, $6);
+        `;
+        await supabase.query(insertAppointmentQuery, [
+            patient_id, doctorName, dateOfAppointment, timeOfAppointment, 'Unpaid', 'Pending'
+        ]);
+
+        res.status(201).json({
+            message: "Appointment successfully created!",
+            patient_id,
+            doctorName,
+            dateOfAppointment,
+            timeOfAppointment
+        });
+    } catch (error) {
+        console.error("Error creating appointment:", error);
+        res.status(500).json({ message: "Error creating appointment." });
+    }
 });
 
 // Start the server
