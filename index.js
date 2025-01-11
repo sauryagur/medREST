@@ -47,7 +47,7 @@ app.get("/beds", (req, res) => {
 
 
 app.post("/new", (req, res) => {
-    console.log(req);
+    res.json(req.body);
 });
 
 app.listen(port, () => {

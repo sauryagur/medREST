@@ -165,24 +165,32 @@
                                             <p class="text-primary m-0 fw-bold">Patient Details</p>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form action="new" method="post">
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Name</strong></label><input class="form-control" type="text" name="name" required=""></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="name"><strong>Name</strong></label>
+                                                            <input class="form-control" type="text" id="name" name="name" required>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Gender</strong></label><select class="form-select" name="gender" required="">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="gender"><strong>Gender</strong></label>
+                                                            <select class="form-select" id="gender" name="gender" required>
                                                                 <optgroup label="Select Gender">
                                                                     <option value="male">Male</option>
                                                                     <option value="female">Female</option>
                                                                     <option value="other">Other</option>
                                                                 </optgroup>
-                                                            </select></div>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Blood Group</strong></label><select class="form-select" name="bloodGroup" required="">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="bloodGroup"><strong>Blood Group</strong></label>
+                                                            <select class="form-select" id="bloodGroup" name="bloodGroup" required>
                                                                 <optgroup label="Select Blood Group">
                                                                     <option value="B+">B+</option>
                                                                     <option value="B-">B-</option>
@@ -190,63 +198,100 @@
                                                                     <option value="A-">A-</option>
                                                                     <option value="O+">O+</option>
                                                                     <option value="O-">O-</option>
-                                                                    <option value="AB-">AB+</option>
+                                                                    <option value="AB+">AB+</option>
+                                                                    <option value="AB-">AB-</option>
                                                                 </optgroup>
-                                                            </select></div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Phone</strong></label><input class="form-control" type="tel" name="phone" required=""></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Email</strong></label><input class="form-control" type="email" name="email" required=""></div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Emergency Contact&nbsp;Name</strong></label><input class="form-control" type="text" name="emergencyContactName" required=""></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Emergency Contact Number</strong></label><input class="form-control" type="tel" name="emergencyContactNumber" required=""></div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Date of Birth</strong></label><input class="form-control" type="date" name="dateOfBirth" required=""></div>
-                                                    </div>
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for=""><strong>Occupation</strong></label><input class="form-control" type="text" name="occupation"></div>
-                                                    </div>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label><input class="form-control" type="text" name="address" required=""></div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="mb-3"><label class="form-label" for="address-2"><strong>Allergies</strong></label><input class="form-control" type="text" name="allergies"></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="mb-3"><label class="form-label" for="address-6"><strong>Current Medication</strong></label><input class="form-control" type="text" name="currentMedication"></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="mb-3"><label class="form-label" for="address-5"><strong>Family Medical History</strong></label><input class="form-control" type="text" name="familyMedicalHistory"></div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col">
-                                                                <div class="mb-3"><label class="form-label" for="address-4"><strong>Past Medical History</strong></label><input class="form-control" type="text" name="pastMedicalHistory"></div>
-                                                            </div>
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Category</strong></label><select class="form-select" name="insuranceType" required="">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="phone"><strong>Phone</strong></label>
+                                                            <input class="form-control" type="tel" id="phone" name="phone" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="email"><strong>Email</strong></label>
+                                                            <input class="form-control" type="email" id="email" name="email" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="emergencyContactName"><strong>Emergency Contact Name</strong></label>
+                                                            <input class="form-control" type="text" id="emergencyContactName" name="emergencyContactName" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="emergencyContactNumber"><strong>Emergency Contact Number</strong></label>
+                                                            <input class="form-control" type="tel" id="emergencyContactNumber" name="emergencyContactNumber" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="dateOfBirth"><strong>Date of Birth</strong></label>
+                                                            <input class="form-control" type="date" id="dateOfBirth" name="dateOfBirth" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="occupation"><strong>Occupation</strong></label>
+                                                            <input class="form-control" type="text" id="occupation" name="occupation">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="address"><strong>Address</strong></label>
+                                                            <input class="form-control" type="text" id="address" name="address" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="allergies"><strong>Allergies</strong></label>
+                                                            <input class="form-control" type="text" id="allergies" name="allergies">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="currentMedication"><strong>Current Medication</strong></label>
+                                                            <input class="form-control" type="text" id="currentMedication" name="currentMedication">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="familyMedicalHistory"><strong>Family Medical History</strong></label>
+                                                            <input class="form-control" type="text" id="familyMedicalHistory" name="familyMedicalHistory">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="pastMedicalHistory"><strong>Past Medical History</strong></label>
+                                                            <input class="form-control" type="text" id="pastMedicalHistory" name="pastMedicalHistory">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="insuranceType"><strong>Category</strong></label>
+                                                            <select class="form-select" id="insuranceType" name="insuranceType" required>
                                                                 <optgroup label="Insurance Type">
                                                                     <option value="Self">Self</option>
                                                                     <option value="Insurance">Insurance</option>
@@ -254,10 +299,13 @@
                                                                     <option value="ECHS">ECHS</option>
                                                                     <option value="Other">Other</option>
                                                                 </optgroup>
-                                                            </select></div>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address-3"><strong>Referred by</strong></label><select class="form-select" name="referredBy" required="">
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="referredBy"><strong>Referred by</strong></label>
+                                                            <select class="form-select" id="referredBy" name="referredBy" required>
                                                                 <optgroup label="Referral">
                                                                     <option value="Relative">Relative</option>
                                                                     <option value="Doctor">Doctor</option>
@@ -265,31 +313,43 @@
                                                                     <option value="Medical Store">Medical Store</option>
                                                                     <option value="Newspaper">Newspaper</option>
                                                                 </optgroup>
-                                                            </select></div>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Doctor</strong></label><select class="form-select" name="doctorName" required="">
-                                                                <optgroup label="Insurance Type">
-                                                                    <option value="Self">Self</option>
-                                                                    <option value="Insurance">Insurance</option>
-                                                                    <option value="CGHS">CGHS</option>
-                                                                    <option value="ECHS">ECHS</option>
-                                                                    <option value="Other">Other</option>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="doctorName"><strong>Doctor</strong></label>
+                                                            <select class="form-select" id="doctorName" name="doctorName" required>
+                                                                <optgroup label="Doctor Name">
+                                                                    <option value="Dr. Smith">Dr. Smith</option>
+                                                                    <option value="Dr. Johnson">Dr. Johnson</option>
+                                                                    <option value="Dr. Brown">Dr. Brown</option>
+                                                                    <option value="Dr. Davis">Dr. Davis</option>
+                                                                    <option value="Dr. Miller">Dr. Miller</option>
                                                                 </optgroup>
-                                                            </select></div>
+                                                            </select>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Time of Appointment</strong></label><input class="form-control" type="date" name="dateOfAppointment" required=""></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="dateOfAppointment"><strong>Date of Appointment</strong></label>
+                                                            <input class="form-control" type="date" id="dateOfAppointment" name="dateOfAppointment" required>
+                                                        </div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="address-3">&nbsp;</label><input class="form-control" type="time" name="timeOfAppointment" required=""></div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label" for="timeOfAppointment"><strong>Time of Appointment</strong></label>
+                                                            <input class="form-control" type="time" id="timeOfAppointment" name="timeOfAppointment" required>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
+                                                <div class="mb-3">
+                                                    <button class="btn btn-primary btn-sm" type="submit">Save Settings</button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
