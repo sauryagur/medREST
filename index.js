@@ -46,6 +46,10 @@ app.get("/beds", (req, res) => {
 });
 
 
+app.post("/new", (req, res) => {
+    console.log(req);
+});
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });

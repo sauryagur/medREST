@@ -127,11 +127,6 @@
                 <div class="container-fluid">
                     <h3 class="text-dark mb-4">New Appointment</h3>
                     <div class="row mb-3">
-                        <div class="col-lg-4">
-                            <div class="card mb-3">
-                                <div class="card-body text-center shadow"><img class="rounded-circle mb-3 mt-4" alt="user icon, icono de usuario, pictogram" src="assets/img/gf18da64c3193b75f7a0cc3e3a561c788764e3a0513788f09c432c3468b23d28863eeaaf88fdf9033c27aee4a3ca04d27e626f8e7e739e099d5fb4f47805fe3e0_640.png" width="160" height="160"></div>
-                            </div>
-                        </div>
                         <div class="col-lg-8">
                             <div class="row mb-3 d-none">
                                 <div class="col">
@@ -173,57 +168,131 @@
                                             <form>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="first_name"><strong>Name</strong></label><input class="form-control" type="text" id="first_name" placeholder="Sheela Devi" name="name"></div>
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Name</strong></label><input class="form-control" type="text" name="name" required=""></div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="username"><strong>Gender</strong></label><input class="form-control" type="text" id="username" placeholder="Gender" name="gender"></div>
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Gender</strong></label><select class="form-select" name="gender" required="">
+                                                                <optgroup label="Select Gender">
+                                                                    <option value="male">Male</option>
+                                                                    <option value="female">Female</option>
+                                                                    <option value="other">Other</option>
+                                                                </optgroup>
+                                                            </select></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="email"><strong>Email Address</strong></label><input class="form-control" type="email" id="email" placeholder="user@example.com" name="email"></div>
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Blood Group</strong></label><select class="form-select" name="bloodGroup" required="">
+                                                                <optgroup label="Select Blood Group">
+                                                                    <option value="B+">B+</option>
+                                                                    <option value="B-">B-</option>
+                                                                    <option value="A+">A+</option>
+                                                                    <option value="A-">A-</option>
+                                                                    <option value="O+">O+</option>
+                                                                    <option value="O-">O-</option>
+                                                                    <option value="AB-">AB+</option>
+                                                                </optgroup>
+                                                            </select></div>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="city"><strong>Phone</strong></label><input class="form-control" type="text" id="city" placeholder="9866XXXXXX" name="phone"></div>
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Phone</strong></label><input class="form-control" type="tel" name="phone" required=""></div>
                                                     </div>
                                                     <div class="col">
-                                                        <div class="mb-3"><label class="form-label" for="country"><strong>Blood Group</strong></label><input class="form-control" type="text" id="country" placeholder="B+" name="bloodgroup"></div>
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Email</strong></label><input class="form-control" type="email" name="email" required=""></div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label><input class="form-control" type="text" id="address" placeholder="Greater Kailash, 38" name="address">
-                                                    <div class="row pt-3">
-                                                        <div class="col">
-                                                            <div class="mb-3"><label class="form-label" for="city"><strong>Phone</strong></label><input class="form-control" type="text" id="city-1" placeholder="9866XXXXXX" name="phone"></div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Emergency Contact&nbsp;Name</strong></label><input class="form-control" type="text" name="emergencyContactName" required=""></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Emergency Contact Number</strong></label><input class="form-control" type="tel" name="emergencyContactNumber" required=""></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Date of Birth</strong></label><input class="form-control" type="date" name="dateOfBirth" required=""></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for=""><strong>Occupation</strong></label><input class="form-control" type="text" name="occupation"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address"><strong>Address</strong></label><input class="form-control" type="text" name="address" required=""></div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="mb-3"><label class="form-label" for="address-2"><strong>Allergies</strong></label><input class="form-control" type="text" name="allergies"></div>
+                                                            </div>
                                                         </div>
-                                                        <div class="col">
-                                                            <div class="mb-3"><label class="form-label" for="country-1"><strong>Blood Group</strong></label><input class="form-control" type="text" id="country-1" placeholder="B+" name="bloodgroup"></div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="mb-3"><label class="form-label" for="address-6"><strong>Current Medication</strong></label><input class="form-control" type="text" name="currentMedication"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="mb-3"><label class="form-label" for="address-5"><strong>Family Medical History</strong></label><input class="form-control" type="text" name="familyMedicalHistory"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col">
+                                                                <div class="mb-3"><label class="form-label" for="address-4"><strong>Past Medical History</strong></label><input class="form-control" type="text" name="pastMedicalHistory"></div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save&nbsp;Settings</button></div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Category</strong></label><select class="form-select" name="insuranceType" required="">
+                                                                <optgroup label="Insurance Type">
+                                                                    <option value="Self">Self</option>
+                                                                    <option value="Insurance">Insurance</option>
+                                                                    <option value="CGHS">CGHS</option>
+                                                                    <option value="ECHS">ECHS</option>
+                                                                    <option value="Other">Other</option>
+                                                                </optgroup>
+                                                            </select></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address-3"><strong>Referred by</strong></label><select class="form-select" name="referredBy" required="">
+                                                                <optgroup label="Referral">
+                                                                    <option value="Relative">Relative</option>
+                                                                    <option value="Doctor">Doctor</option>
+                                                                    <option value="Camp">Camp</option>
+                                                                    <option value="Medical Store">Medical Store</option>
+                                                                    <option value="Newspaper">Newspaper</option>
+                                                                </optgroup>
+                                                            </select></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Doctor</strong></label><select class="form-select" name="doctorName" required="">
+                                                                <optgroup label="Insurance Type">
+                                                                    <option value="Self">Self</option>
+                                                                    <option value="Insurance">Insurance</option>
+                                                                    <option value="CGHS">CGHS</option>
+                                                                    <option value="ECHS">ECHS</option>
+                                                                    <option value="Other">Other</option>
+                                                                </optgroup>
+                                                            </select></div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address-1"><strong>Time of Appointment</strong></label><input class="form-control" type="date" name="dateOfAppointment" required=""></div>
+                                                    </div>
+                                                    <div class="col">
+                                                        <div class="mb-3"><label class="form-label" for="address-3">&nbsp;</label><input class="form-control" type="time" name="timeOfAppointment" required=""></div>
+                                                    </div>
+                                                </div>
+                                                <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
                                             </form>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card shadow mb-5">
-                        <div class="card-header py-3">
-                            <p class="text-primary m-0 fw-bold">Forum Settings</p>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <form>
-                                        <div class="mb-3"><label class="form-label" for="signature"><strong>Signature</strong><br></label><textarea class="form-control" id="signature" rows="4" name="signature"></textarea></div>
-                                        <div class="mb-3">
-                                            <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1"><strong>Notify me about new replies</strong></label></div>
-                                        </div>
-                                        <div class="mb-3"><button class="btn btn-primary btn-sm" type="submit">Save Settings</button></div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
