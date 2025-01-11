@@ -330,7 +330,38 @@
                             document.body.appendChild(form);
                             form.submit();
                         }
+
+                        // Function to update circle color based on status
+                        function updateCircleColor(patientId, status) {
+                            const circle = document.getElementById(patientId); // Get the circle element by patient ID
+                            if (circle) {
+                                // Update the circle's background color based on the status
+                                if (status === "In-Progress") {
+                                    circle.style.backgroundColor = "#FFC470";
+                                } else if (status === "Workup") {
+                                    circle.style.backgroundColor = "#4793AF";
+                                } else if (status === "Waiting") {
+                                    circle.style.backgroundColor = "#DD5746";
+                                } else if (status === "Discharged") {
+                                    circle.style.backgroundColor = "green";
+                                } else if (status === "Arrived") {
+                                    circle.style.backgroundColor = "gray";
+                                }
+                            }
+                        }
+
+                        // This section makes sure the color of each circle is updated when the page is loaded
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Loop through all rows of appointments and update circle colors based on the patient's status
+                            const appointments = <%- JSON.stringify(appointments) %>; // Make sure to inject appointments data into the script
+                            appointments.forEach((appointment) => {
+                                const patientId = appointment['Patient ID']; // Get patient ID
+                                const status = appointment.Status; // Get the current status of the patient
+                                updateCircleColor(patientId, status); // Update the circle color
+                            });
+                        });
                     </script>
+
                 </div>
 
             </div>

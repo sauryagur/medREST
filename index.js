@@ -247,6 +247,31 @@ app.post("/new", async (req, res) => {
     }
 });
 
+// POST route to update appointment status
+app.post('/appointments/updateStatus', async (req, res) => {
+    const { patient_id, status } = req.body;
+
+    try {
+        // Update the status of the appointment in the database
+        const query = `
+            UPDATE appointments
+            SET status = $1
+            WHERE patient_id = $2 AND department = 'OPD'
+        `;
+
+        // Execute the query to update the status
+        await pool.query(query, [status, patient_id]);
+
+        // Redirect back to the appointments page after updating the status
+        res.redirect('/appointments');
+    } catch (err) {
+        // Log the error and send an error message
+        console.error('Error updating status:', err);
+        res.status(500).send('An error occurred while updating the status.');
+    }
+});
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
