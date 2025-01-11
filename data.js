@@ -308,3 +308,47 @@ export let medicines = [
         purchase_quantity: 120
     }
 ];
+
+export let doctors = [
+    {
+        "id": 1,
+        "name": "Dr. John Smith",
+        "dob": "1975-08-15",
+        "mobile": "9876543210",
+        "email": "john.smith@example.com",
+        "speciality": "Cardiology"
+    },
+    {
+        "id": 2,
+        "name": "Dr. Emily Johnson",
+        "dob": "1980-05-22",
+        "mobile": "8765432109",
+        "email": "emily.johnson@example.com",
+        "speciality": "Neurology"
+    },
+    {
+        "id": 3,
+        "name": "Dr. Rajesh Kumar",
+        "dob": "1983-11-05",
+        "mobile": "7654321098",
+        "email": "rajesh.kumar@example.com",
+        "speciality": "Orthopedics"
+    },
+    {
+        "id": 4,
+        "name": "Dr. Olivia Brown",
+        "dob": "1990-03-17",
+        "mobile": "6543210987",
+        "email": "olivia.brown@example.com",
+        "speciality": "Pediatrics"
+    },
+    {
+        "id": 5,
+        "name": "Dr. Michael Davis",
+        "dob": "1978-12-10",
+        "mobile": "5432109876",
+        "email": "michael.davis@example.com",
+        "speciality": "Dermatology"
+    }
+]
+

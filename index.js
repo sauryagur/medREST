@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
-
-import {appointments, beds, medicines} from "./data.js";
+import { createClient } from '@supabase/supabase-js';
+import {appointments, beds, medicines, doctors} from "./data.js";
 
 
 const app = express();
@@ -15,12 +15,45 @@ app.get("/", (req, res) => {
     res.render("index.ejs");
 });
 
-app.get("/appointments", (req, res) => {
-    res.render("opd.ejs", {appointments: appointments});
+app.get("/appointments", async (req, res) => {
+    try {
+        // Fetch data from the "patients" table
+        const { data: patients, error: patientError } = await supabase
+            .from('patients')
+            .select('*'); // Adjust fields if needed
+
+        if (patientError) {
+            throw patientError;
+        }
+
+        // Fetch data from the "appointments" table
+        const { data: appointments, error: appointmentError } = await supabase
+            .from('appointments')
+            .select('*, patients(*)'); // Join with the "patients" table
+
+        if (appointmentError) {
+            throw appointmentError;
+        }
+
+        // Merge patient data into appointments
+        const appointmentsWithPatients = appointments.map(appointment => {
+            const patient = patients.find(p => p.id === appointment.patient_id); // Match patient_id from appointments to patients
+            return {
+                ...appointment,
+                ...patient, // Merge patient data into the appointment object
+            };
+        });
+
+        // Render the EJS template with the merged data
+        res.render("opd.ejs", { appointments: appointmentsWithPatients });
+    } catch (error) {
+        console.error('Error fetching data from Supabase:', error);
+        res.status(500).send('Internal Server Error');
+    }
 });
 
 app.get("/new", (req, res) => {
-    res.render("newappointment.ejs");
+    res.render("newappointment.ejs", {doctors: doctors});
 });
 
 

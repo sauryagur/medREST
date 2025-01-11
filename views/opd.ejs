@@ -157,7 +157,7 @@
                         <h3 class="text-dark mb-4">OPD Appointments</h3>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-end align-items-xl-center">
-                        <a href="/appointments/new"><button class="btn btn-primary" type="button">New Appointment</button></a>
+                        <a href="/new"><button class="btn btn-primary" type="button">New Appointment</button></a>
                     </div>
                 </div>
                 <div class="card shadow">
@@ -202,39 +202,21 @@
                                 </thead>
                                 <tbody>
                                 <% if (locals.appointments) { %>
-                                    <% appointments.forEach((patient) => { %>
+                                    <% appointments.forEach((appointment) => { %>
                                         <tr>
                                             <td style="display: flex;align-items: center;">
-                                                <div class="rounded-circle me-2" id="<%= patient["Patient ID"] %>" style="width: 30px;height: 30px;background: white;"></div>
-                                                <span><a href="/patients/<%=patient["Patient ID"]%>" style="color: inherit"><%= patient["Name"] %></a></span>
+                                                <div class="rounded-circle me-2" id="<%= appointment.patient_id %>" style="width: 30px;height: 30px;background: white;"></div>
+                                                <span><a href="/patients/<%= appointment.patient_id %>" style="color: inherit"><%= appointment.name %></a></span>
                                             </td>
-                                            <td><%= patient["Patient ID"] %></td>
-                                            <td><%= patient["Gender"] %></td>
-                                            <td><%= patient["Old/New"] %></td>
-                                            <td><%= patient["Payment"] %></td>
-                                            <td><%= patient["Doctor Name"] %></td>
-                                            <td><%= patient["Time"].slice(11,16) %></td>
-                                            <td><%= patient["Status"] %></td>
+                                            <td><%= appointment.patient_id %></td>
+                                            <td><%= appointment.gender %></td>
+                                            <td><%= appointment.old_new %></td>
+                                            <td><%= appointment.payment %></td>
+                                            <td><%= appointment.doctor_name %></td>
+                                            <td><%= appointment.time.slice(11,16) %></td>
+                                            <td><%= appointment.status %></td>
                                         </tr>
                                     <% }); %>
-                                    <script>
-                                        const allCircles = document.querySelectorAll("td > div");
-                                        const appointments = <%- JSON.stringify(appointments) %>;
-                                        allCircles.forEach((circle) => {
-                                            const patient = appointments.find((patient) => patient["Patient ID"] === circle.id);
-                                            if (patient["Status"] === "In-Progress") {
-                                                circle.style.backgroundColor = "#FFC470";
-                                            } else if (patient["Status"] === "Workup") {
-                                                circle.style.backgroundColor = "#4793AF";
-                                            } else if (patient["Status"] === "Waiting") {
-                                                circle.style.backgroundColor = "#DD5746";
-                                            } else if (patient["Status"] === "Discharged") {
-                                                circle.style.backgroundColor = "green";
-                                            } else if (patient["Status"] === "Arrived") {
-                                                circle.style.backgroundColor = "gray";
-                                            }
-                                        });
-                                    </script>
                                 <% } %>
                                 </tbody>
                                 <tfoot>
@@ -261,6 +243,26 @@
                             </div>
                         </div>
                     </div>
+
+                    <script>
+                        const allCircles = document.querySelectorAll("td > div");
+                        const appointments = <%- JSON.stringify(appointments) %>;
+                        allCircles.forEach((circle) => {
+                            const patient = appointments.find((appointment) => appointment.patient_id === circle.id);
+                            if (patient.status === "In-Progress") {
+                                circle.style.backgroundColor = "#FFC470";
+                            } else if (patient.status === "Workup") {
+                                circle.style.backgroundColor = "#4793AF";
+                            } else if (patient.status === "Waiting") {
+                                circle.style.backgroundColor = "#DD5746";
+                            } else if (patient.status === "Discharged") {
+                                circle.style.backgroundColor = "green";
+                            } else if (patient.status === "Arrived") {
+                                circle.style.backgroundColor = "gray";
+                            }
+                        });
+                    </script>
+
                 </div>
             </div>
         </div>
