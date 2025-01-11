@@ -64,7 +64,7 @@ app.get('/appointments', async (req, res) => {
         res.status(500).send('Error fetching appointments');
     }
 });
-;
+
 
 
 // Render the page to create a new appointment
@@ -78,8 +78,80 @@ app.get("/inventory", (req, res) => {
 });
 
 // Render the IPD page
-app.get("/ipd", (req, res) => {
-    res.render("ipd.ejs", {appointments});
+// Endpoint to fetch OPD appointments
+app.get('/appointments', async (req, res) => {
+    try {
+        // Query to fetch data from patients and appointments tables, filtering for OPD department
+        const query = `
+        SELECT 
+            p.patient_id AS "Patient ID", 
+            p.name AS "Name", 
+            p.gender AS "Gender", 
+            p.date_of_birth AS "Date of Birth", 
+            a.time_of_appointment AS "Time",
+            a.payment AS "Payment",
+            a.status AS "Status",
+            a.doctor_name AS "Doctor Name",
+            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+        FROM patients p
+        JOIN appointments a ON p.patient_id = a.patient_id
+        WHERE a.department = 'OPD'  -- Filter for OPD department
+        ORDER BY a.time_of_appointment DESC;
+        `;
+
+        // Execute the query to fetch appointments
+        const result = await pool.query(query);
+        const appointments = result.rows;
+
+        // Add "Old/New" status based on the number of appointments
+        appointments.forEach(appointment => {
+            appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
+        });
+
+        // Send the data to the EJS template
+        res.render('opd.ejs', {appointments});
+    } catch (err) {
+        console.error('Error fetching appointments:', err);
+        res.status(500).send('Error fetching appointments');
+    }
+});
+
+// Endpoint to fetch IPD appointments
+app.get('/ipd', async (req, res) => {
+    try {
+        // Query to fetch data from patients and appointments tables, filtering for IPD department
+        const query = `
+        SELECT 
+            p.patient_id AS "Patient ID", 
+            p.name AS "Name", 
+            p.gender AS "Gender", 
+            p.date_of_birth AS "Date of Birth", 
+            a.time_of_appointment AS "Time",
+            a.payment AS "Payment",
+            a.status AS "Status",
+            a.doctor_name AS "Doctor Name",
+            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+        FROM patients p
+        JOIN appointments a ON p.patient_id = a.patient_id
+        WHERE a.department = 'IPD'  -- Filter for IPD department
+        ORDER BY a.time_of_appointment DESC;
+        `;
+
+        // Execute the query to fetch appointments
+        const result = await pool.query(query);
+        const appointments = result.rows;
+
+        // Add "Old/New" status based on the number of appointments
+        appointments.forEach(appointment => {
+            appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
+        });
+
+        // Send the data to the EJS template
+        res.render('ipd.ejs', {appointments});
+    } catch (err) {
+        console.error('Error fetching IPD appointments:', err);
+        res.status(500).send('Error fetching IPD appointments');
+    }
 });
 
 // Staff page (under construction)
