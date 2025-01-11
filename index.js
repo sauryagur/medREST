@@ -2,11 +2,30 @@ import express from "express";
 import bodyParser from "body-parser";
 import { createClient } from '@supabase/supabase-js';
 import {appointments, beds, medicines, doctors} from "./data.js";
+import dotenv from 'dotenv';
+import pg from "pg";
 
+dotenv.config();
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
+const supabase = new pg.Client({
+    connectionString: process.env.SUPABASE_DB_URL,
+});
+
+async function connectToDatabase() {
+    try {
+        // Connect to the database
+        await supabase.connect();
+        console.log("Connected to Supabase PostgreSQL database!");
+    } catch (error) {
+        console.error("Error connecting to the database:", error);
+    }
+}
+
+connectToDatabase();
+
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
