@@ -120,13 +120,13 @@ app.post("/new", async (req, res) => {
     } = req.body;
 
     try {
-        // Step 1: Check if the patient already exists in the database (using phone or email for uniqueness)
+        // Step 1: Check if the patient already exists in the database (using lowercase(name) and phone for uniqueness)
         const checkPatientQuery = `
             SELECT patient_id 
             FROM patients 
-            WHERE phone = $1 OR email = $2;
+            WHERE LOWER(name) = LOWER($1) AND phone = $2;
         `;
-        const patientResult = await supabase.query(checkPatientQuery, [phone, email]);
+        const patientResult = await supabase.query(checkPatientQuery, [name, phone]);
 
         let patient_id;
 
