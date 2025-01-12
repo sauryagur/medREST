@@ -237,7 +237,6 @@
                                 <% appointments.sort((a, b) => statusOrder.indexOf(a.Status) - statusOrder.indexOf(b.Status)); %>
                                 <% appointments.forEach((appointment) => { %>
                                     <tr>
-                                        <%console.log(appointment)%>
                                         <td style="display: flex; align-items: center;">
                                             <div class="rounded-circle me-2" id="<%= appointment.id %>"
                                                  style="width: 30px; height: 30px; background:

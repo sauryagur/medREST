@@ -83,10 +83,12 @@ app.get('/ipd', async (req, res) => {
         // Query to fetch data from patients and appointments tables, filtering for IPD department
         const query = `
         SELECT 
+            a.appointment_id AS id,
             p.patient_id AS "Patient ID", 
             p.name AS "Name", 
             p.gender AS "Gender", 
-            p.date_of_birth AS "Date of Birth", 
+            p.date_of_birth AS "Date of Birth",
+            TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
             a.time_of_appointment AS "Time",
             a.payment AS "Payment",
             a.status AS "Status",
@@ -95,7 +97,7 @@ app.get('/ipd', async (req, res) => {
         FROM patients p
         JOIN appointments a ON p.patient_id = a.patient_id
         WHERE a.department = 'IPD'  -- Filter for IPD department
-        ORDER BY a.time_of_appointment DESC;
+        ORDER BY status DESC;
         `;
 
         // Execute the query to fetch appointments
