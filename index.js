@@ -163,7 +163,7 @@ app.post("/new", async (req, res) => {
             FROM patients 
             WHERE LOWER(name) = LOWER($1) AND phone = $2;
         `;
-        const patientResult = await supabase.query(checkPatientQuery, [name, phone]);
+        const patientResult = await pool.query(checkPatientQuery, [name, phone]);
 
         let patient_id;
 
@@ -179,7 +179,7 @@ app.post("/new", async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                 RETURNING patient_id;
             `;
-            const insertPatientResult = await supabase.query(insertPatientQuery, [name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber, dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory, pastMedicalHistory, insuranceType, referredBy]);
+            const insertPatientResult = await pool.query(insertPatientQuery, [name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber, dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory, pastMedicalHistory, insuranceType, referredBy]);
 
             patient_id = insertPatientResult.rows[0].patient_id;
         }
