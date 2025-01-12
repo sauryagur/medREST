@@ -32,21 +32,23 @@ app.get('/appointments', async (req, res) => {
     try {
         // Query to fetch data from patients and appointments tables, filtering for OPD department
         const query = `
-        SELECT 
-            p.patient_id AS "Patient ID", 
-            p.name AS "Name", 
-            p.gender AS "Gender", 
-            p.date_of_birth AS "Date of Birth", 
-            a.time_of_appointment AS "Time",
-            a.payment AS "Payment",
-            a.status AS "Status",
-            a.doctor_name AS "Doctor Name",
-            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
-        FROM patients p
-        JOIN appointments a ON p.patient_id = a.patient_id
-        WHERE a.department = 'OPD'  -- Filter for OPD department
-        ORDER BY a.time_of_appointment DESC;
-        `;
+    SELECT 
+        a.appointment_id AS id,
+        p.patient_id AS "Patient ID", 
+        p.name AS "Name", 
+        p.gender AS "Gender", 
+        p.date_of_birth AS "Date of Birth",
+        TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
+        a.time_of_appointment AS "Time",
+        a.payment AS "Payment",
+        a.status AS "Status",
+        a.doctor_name AS "Doctor Name",
+        COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+    FROM patients p
+    JOIN appointments a ON p.patient_id = a.patient_id
+    WHERE a.department = 'OPD'  -- Filter for OPD department
+    ORDER BY status DESC;
+`;
 
         // Execute the query to fetch appointments
         const result = await pool.query(query);
@@ -58,13 +60,12 @@ app.get('/appointments', async (req, res) => {
         });
 
         // Send the data to the EJS template
-        res.render('opd.ejs', {appointments});
+        res.render('opd.ejs', {appointments, title: "OPD Appointments", URL: "/appointments"});
     } catch (err) {
         console.error('Error fetching appointments:', err);
         res.status(500).send('Error fetching appointments');
     }
 });
-
 
 
 // Render the page to create a new appointment
@@ -77,46 +78,6 @@ app.get("/inventory", (req, res) => {
     res.render("inventory.ejs", {medicines});
 });
 
-// Render the IPD page
-// Endpoint to fetch OPD appointments
-app.get('/appointments', async (req, res) => {
-    try {
-        // Query to fetch data from patients and appointments tables, filtering for OPD department
-        const query = `
-        SELECT 
-            p.patient_id AS "Patient ID", 
-            p.name AS "Name", 
-            p.gender AS "Gender", 
-            p.date_of_birth AS "Date of Birth", 
-            a.time_of_appointment AS "Time",
-            a.payment AS "Payment",
-            a.status AS "Status",
-            a.doctor_name AS "Doctor Name",
-            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
-        FROM patients p
-        JOIN appointments a ON p.patient_id = a.patient_id
-        WHERE a.department = 'OPD'  -- Filter for OPD department
-        ORDER BY a.time_of_appointment DESC;
-        `;
-
-        // Execute the query to fetch appointments
-        const result = await pool.query(query);
-        const appointments = result.rows;
-
-        // Add "Old/New" status based on the number of appointments
-        appointments.forEach(appointment => {
-            appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
-        });
-
-        // Send the data to the EJS template
-        res.render('opd.ejs', {appointments});
-    } catch (err) {
-        console.error('Error fetching appointments:', err);
-        res.status(500).send('Error fetching appointments');
-    }
-});
-
-// Endpoint to fetch IPD appointments
 app.get('/ipd', async (req, res) => {
     try {
         // Query to fetch data from patients and appointments tables, filtering for IPD department
@@ -147,7 +108,7 @@ app.get('/ipd', async (req, res) => {
         });
 
         // Send the data to the EJS template
-        res.render('ipd.ejs', {appointments});
+        res.render('opd.ejs', {appointments, title: "IPD", URL: "ipd"});
     } catch (err) {
         console.error('Error fetching IPD appointments:', err);
         res.status(500).send('Error fetching IPD appointments');
@@ -216,11 +177,7 @@ app.post("/new", async (req, res) => {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
                 RETURNING patient_id;
             `;
-            const insertPatientResult = await supabase.query(insertPatientQuery, [
-                name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber,
-                dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory,
-                pastMedicalHistory, insuranceType, referredBy
-            ]);
+            const insertPatientResult = await supabase.query(insertPatientQuery, [name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber, dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory, pastMedicalHistory, insuranceType, referredBy]);
 
             patient_id = insertPatientResult.rows[0].patient_id;
         }
@@ -230,37 +187,36 @@ app.post("/new", async (req, res) => {
             INSERT INTO appointments (patient_id, doctor_name, date_of_appointment, time_of_appointment, payment, status)
             VALUES ($1, $2, $3, $4, $5, $6);
         `;
-        await supabase.query(insertAppointmentQuery, [
-            patient_id, doctorName, dateOfAppointment, timeOfAppointment, 'Unpaid', 'Pending'
-        ]);
+        await supabase.query(insertAppointmentQuery, [patient_id, doctorName, dateOfAppointment, timeOfAppointment, 'Unpaid', 'Pending']);
 
         res.status(201).json({
-            message: "Appointment successfully created!",
-            patient_id,
-            doctorName,
-            dateOfAppointment,
-            timeOfAppointment
+            message: "Appointment successfully created!", patient_id, doctorName, dateOfAppointment, timeOfAppointment
         });
     } catch (error) {
         console.error("Error creating appointment:", error);
-        res.status(500).json({ message: "Error creating appointment." });
+        res.status(500).json({message: "Error creating appointment."});
     }
 });
 
 // POST route to update appointment status
 app.post('/appointments/updateStatus', async (req, res) => {
-    const { patient_id, status } = req.body;
+    const {appointment_id, status} = req.body;
 
     try {
         // Update the status of the appointment in the database
         const query = `
             UPDATE appointments
             SET status = $1
-            WHERE patient_id = $2 AND department = 'OPD'
+            WHERE appointment_id = $2 AND department = 'OPD'
+            RETURNING *
         `;
 
         // Execute the query to update the status
-        await pool.query(query, [status, patient_id]);
+        const result = await pool.query(query, [status, appointment_id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).send('Appointment not found.');
+        }
 
         // Redirect back to the appointments page after updating the status
         res.redirect('/appointments');
@@ -270,7 +226,6 @@ app.post('/appointments/updateStatus', async (req, res) => {
         res.status(500).send('An error occurred while updating the status.');
     }
 });
-
 
 // Start the server
 app.listen(port, () => {

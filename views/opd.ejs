@@ -189,7 +189,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col">
-                        <h3 class="text-dark mb-4">OPD Appointments</h3>
+                        <h3 class="text-dark mb-4"><%= title %></h3>
                     </div>
                     <div class="col d-xl-flex justify-content-xl-end align-items-xl-center">
                         <a href="/new">
@@ -200,179 +200,140 @@
                 <div class="card shadow">
                     <div class="card-header py-3">
                         <p class="text-primary m-0 fw-bold">Patients</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6 text-nowrap">
-                                <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                                    <label class="form-label">Show
-                                        <select class="d-inline-block form-select form-select-sm">
-                                            <option value="10" selected>10</option>
-                                            <option value="25">25</option>
-                                            <option value="50">50</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                                    <label class="form-label">
-                                        <input type="search" class="form-control form-control-sm"
-                                               aria-controls="dataTable" placeholder="Search">
-                                    </label>
-                                </div>
-                            </div>
+                        <div class="col d-flex justify-content-end">
+                            <form action="/<%= URL %>/filter" method="POST" class="d-inline">
+                                <input type="hidden" name="filter" value="Today">
+                                <button class="btn btn-outline-primary me-2" type="submit">Today</button>
+                            </form>
+                            <form action="/<%= URL %>/filter" method="POST" class="d-inline">
+                                <input type="hidden" name="filter" value="Tomorrow">
+                                <button class="btn btn-outline-primary me-2" type="submit">Tomorrow</button>
+                            </form>
+                            <form action="/<%= URL %>/filter" method="POST" class="d-inline">
+                                <input type="hidden" name="filter" value="All">
+                                <button class="btn btn-outline-primary" type="submit">All</button>
+                            </form>
                         </div>
-                        <div class="table-responsive table mt-2" id="dataTable" role="grid"
-                             aria-describedby="dataTable_info">
-                            <table class="table my-0" id="dataTable">
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Patient ID</th>
-                                    <th>Gender</th>
-                                    <th>Old/New</th>
-                                    <th>Payment</th>
-                                    <th>Doctor Name</th>
-                                    <th>Time</th>
-                                    <th>Status</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <% if (appointments && appointments.length > 0) { %>
-                                    <% appointments.forEach((appointment) => { %>
-                                        <tr>
-                                            <td style="display: flex; align-items: center;">
-                                                <div class="rounded-circle me-2" id="<%= appointment['Patient ID'] %>"
-                                                     style="width: 30px; height: 30px; background: white;"></div>
-                                                <span><a href="/patients/<%= appointment['Patient ID'] %>"
-                                                         style="color: inherit"><%= appointment.Name %></a></span>
-                                            </td>
-                                            <td><%= appointment['Patient ID'] %></td>
-                                            <td><%= appointment.Gender %></td>
-                                            <td><%= appointment['Old/New'] %></td>
-                                            <td><%= appointment.Payment %></td>
-                                            <td><%= appointment['Doctor Name'] %></td>
-                                            <td><%= appointment.Time ? appointment.Time.slice(0, 5) : 'N/A' %></td>
-                                            <td>
-                                                <select class="form-select"
-                                                        onchange="updateStatus(<%= appointment['Patient ID'] %>, this.value)">
-                                                    <option value="In-Progress" <%= appointment.Status === 'In-Progress' ? 'selected' : '' %>>
-                                                        In-Progress
-                                                    </option>
-                                                    <option value="Workup" <%= appointment.Status === 'Workup' ? 'selected' : '' %>>
-                                                        Workup
-                                                    </option>
-                                                    <option value="Waiting" <%= appointment.Status === 'Waiting' ? 'selected' : '' %>>
-                                                        Waiting
-                                                    </option>
-                                                    <option value="Discharged" <%= appointment.Status === 'Discharged' ? 'selected' : '' %>>
-                                                        Discharged
-                                                    </option>
-                                                    <option value="Arrived" <%= appointment.Status === 'Arrived' ? 'selected' : '' %>>
-                                                        Arrived
-                                                    </option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                    <% }); %>
-                                <% } else { %>
+                    </div>
+                    <div class="table-responsive table mt-2" id="dataTable" role="grid"
+                         aria-describedby="dataTable_info">
+                        <table class="table my-0" id="dataTable">
+                            <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Patient ID</th>
+                                <th>Gender</th>
+                                <th>Old/New</th>
+                                <th>Payment</th>
+                                <th>Doctor Name</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <% if (appointments && appointments.length > 0) { %>
+                                <% const statusOrder = ['Waiting', 'In-Progress', 'Workup', 'Arrived', 'Pending', 'Discharged']; %>
+                                <% appointments.sort((a, b) => statusOrder.indexOf(a.Status) - statusOrder.indexOf(b.Status)); %>
+                                <% appointments.forEach((appointment) => { %>
                                     <tr>
-                                        <td colspan="8">No appointments found.</td>
-                                    </tr>
-                                <% } %>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6 align-self-center">
-                                <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Showing
-                                    1 to 10 of 27</p>
-                            </div>
-                            <div class="col-md-6">
-                                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                                    <ul class="pagination">
-                                        <li class="page-item disabled"><a class="page-link" aria-label="Previous"
-                                                                          href="#"><span aria-hidden="true">«</span></a>
-                                        </li>
-                                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item"><a class="page-link" aria-label="Next" href="#"><span
-                                                        aria-hidden="true">»</span></a></li>
-                                    </ul>
-                                </nav>
-                            </div>
-                        </div>
+                                        <%console.log(appointment)%>
+                                        <td style="display: flex; align-items: center;">
+                                            <div class="rounded-circle me-2" id="<%= appointment.id %>"
+                                                 style="width: 30px; height: 30px; background:
+                                                 <%= appointment.Status === 'In-Progress' ? '#F5A623' :
+                                                         appointment.Status === 'Workup' ? '#8E44AD' :
+                                                                 appointment.Status === 'Waiting' ? '#E74C3C' :
+                                                                         appointment.Status === 'Discharged' ? '#2ECC71' :
+                                                                                 appointment.Status === 'Arrived' ? '#4A90E2' :
+                                                                                         appointment.Status === 'Pending' ? '#FFFFFF' : 'white' %>;">
+                                            </div>
+
                     </div>
+                    <span><a href="/patients/<%= appointment['Patient ID'] %>"
+                             style="color: inherit"><%= appointment.Name %></a></span>
+                    </td>
+                    <td><%= appointment['Patient ID'] %></td>
+                    <td><%= appointment.Gender %></td>
+                    <td><%= appointment['Old/New'] %></td>
+                    <td><%= appointment.Payment %></td>
+                    <td><%= appointment['Doctor Name'] %></td>
+                    <td><%= appointment.Date ? appointment.Date : 'N/A' %></td>
+                    <td><%= appointment.Time ? appointment.Time.slice(0, 5) : 'N/A' %></td>
+                    <td>
+                        <select class="form-select"
+                                onchange="updateStatus(<%= appointment.id %>, this.value)">
+                            <option value="Waiting" <%= appointment.Status === 'Waiting' ? 'selected' : '' %>>Waiting
+                            </option>
+                            <option value="In-Progress" <%= appointment.Status === 'In-Progress' ? 'selected' : '' %>>
+                                In-Progress
+                            </option>
+                            <option value="Workup" <%= appointment.Status === 'Workup' ? 'selected' : '' %>>Workup
+                            </option>
+                            <option value="Arrived" <%= appointment.Status === 'Arrived' ? 'selected' : '' %>>Arrived
+                            </option>
+                            <option value="Pending" <%= appointment.Status === 'Pending' ? 'selected' : '' %>>Pending
+                            </option>
+                            <option value="Discharged" <%= appointment.Status === 'Discharged' ? 'selected' : '' %>>
+                                Discharged
+                            </option>
+                        </select>
+                    </td>
+                    </tr>
+                    <% }); %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="9">No appointments found.</td>
+                        </tr>
+                    <% } %>
+                    </tbody>
 
-                    <script>
-                        // Function to handle status change and auto-submit
-                        function updateStatus(patientId, status) {
-                            const form = document.createElement('form');
-                            form.method = 'POST';
-                            form.action = '/appointments/updateStatus';
 
-                            const patientIdInput = document.createElement('input');
-                            patientIdInput.type = 'hidden';
-                            patientIdInput.name = 'patient_id';
-                            patientIdInput.value = patientId;
-
-                            const statusInput = document.createElement('input');
-                            statusInput.type = 'hidden';
-                            statusInput.name = 'status';
-                            statusInput.value = status;
-
-                            form.appendChild(patientIdInput);
-                            form.appendChild(statusInput);
-
-                            document.body.appendChild(form);
-                            form.submit();
-                        }
-
-                        // Function to update circle color based on status
-                        function updateCircleColor(patientId, status) {
-                            const circle = document.getElementById(patientId); // Get the circle element by patient ID
-                            if (circle) {
-                                // Update the circle's background color based on the status
-                                if (status === "In-Progress") {
-                                    circle.style.backgroundColor = "#FFC470";
-                                } else if (status === "Workup") {
-                                    circle.style.backgroundColor = "#4793AF";
-                                } else if (status === "Waiting") {
-                                    circle.style.backgroundColor = "#DD5746";
-                                } else if (status === "Discharged") {
-                                    circle.style.backgroundColor = "green";
-                                } else if (status === "Arrived") {
-                                    circle.style.backgroundColor = "gray";
-                                }
-                            }
-                        }
-
-                        // This section makes sure the color of each circle is updated when the page is loaded
-                        document.addEventListener('DOMContentLoaded', function() {
-                            // Loop through all rows of appointments and update circle colors based on the patient's status
-                            const appointments = <%- JSON.stringify(appointments) %>; // Make sure to inject appointments data into the script
-                            appointments.forEach((appointment) => {
-                                const patientId = appointment['Patient ID']; // Get patient ID
-                                const status = appointment.Status; // Get the current status of the patient
-                                updateCircleColor(patientId, status); // Update the circle color
-                            });
-                        });
-                    </script>
-
+                    </table>
                 </div>
 
+
+                <script>
+                    // Function to handle status change and auto-submit
+                    function updateStatus(appointmentId, status) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = '/appointments/updateStatus';
+
+                        const appointmentIdInput = document.createElement('input');
+                        appointmentIdInput.type = 'hidden';
+                        appointmentIdInput.name = 'appointment_id';
+                        appointmentIdInput.value = appointmentId;
+
+                        const statusInput = document.createElement('input');
+                        statusInput.type = 'hidden';
+                        statusInput.name = 'status';
+                        statusInput.value = status;
+
+                        form.appendChild(appointmentIdInput);
+                        form.appendChild(statusInput);
+
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                    // Function to update circle color based on status
+                    // This section makes sure the color of each circle is updated when the page is loaded
+                    // Loop through all rows of appointments and update circle colors based on the patient's status
+                    const appointments = <%- JSON.stringify(appointments) %>; // Make sure to inject appointments data into the script
+                </script>
+
             </div>
+
         </div>
-        <footer class="bg-white sticky-footer">
-            <div class="container my-auto">
-                <div class="text-center my-auto copyright"><span>Copyright © Team Works On My Machine 2025</span></div>
-            </div>
-        </footer>
+
     </div>
-    <a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
+    <footer class="bg-white sticky-footer">
+        <div class="container my-auto">
+            <div class="text-center my-auto copyright"><span>Copyright © Team Works On My Machine 2025</span></div>
+        </div>
+    </footer>
+</div>
+<a class="border rounded d-inline scroll-to-top" href="#page-top"><i class="fas fa-angle-up"></i></a>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="assets/js/bs-init.js"></script>
