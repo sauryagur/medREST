@@ -3,6 +3,9 @@ import bodyParser from "body-parser";
 import pkg from 'pg';
 import {beds, doctors, medicines} from "./data.js";
 import dotenv from 'dotenv';
+import session from 'express-session';
+import passport from 'passport';
+
 
 dotenv.config();
 
@@ -10,6 +13,15 @@ const app = express();
 const port = 3000;
 const saltRounds = 10;
 const {Pool} = pkg;
+
+//Session
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+    })
+);
 
 // Initialize Supabase (PostgreSQL) connection pool
 const pool = new Pool({
@@ -21,6 +33,8 @@ const pool = new Pool({
 // Middleware setup
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+
+
 
 // Render the index page
 app.get("/", (req, res) => {
@@ -78,6 +92,7 @@ app.get("/inventory", (req, res) => {
     res.render("inventory.ejs", {medicines});
 });
 
+//Render IPD Page
 app.get('/ipd', async (req, res) => {
     try {
         // Query to fetch data from patients and appointments tables, filtering for IPD department
@@ -229,6 +244,7 @@ app.post('/appointments/updateStatus', async (req, res) => {
     }
 });
 
+//Render the login page
 app.get("/login", (req, res) => {
     res.render('login.ejs');
 });
