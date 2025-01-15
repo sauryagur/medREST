@@ -5,6 +5,7 @@ import {beds, doctors, medicines} from "./data.js";
 import dotenv from 'dotenv';
 import session from 'express-session';
 import passport from 'passport';
+import {Strategy as GoogleStrategy} from 'passport-google-oauth20';
 
 
 dotenv.config();
@@ -33,7 +34,23 @@ const pool = new Pool({
 // Middleware setup
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
+app.use(passport.initialize());
+app.use(passport.session());
 
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((user, done) => done(null, user));
+
+passport.use(
+    new GoogleStrategy({
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: "http://localhost:3000/auth/google/callback",
+        },
+        (accessToken, refreshToken, profile, done) => {
+            return done(null, profile);
+        }
+    )
+);
 
 
 // Render the index page
@@ -248,6 +265,27 @@ app.post('/appointments/updateStatus', async (req, res) => {
 app.get("/login", (req, res) => {
     res.render('login.ejs');
 });
+
+app.get("/auth/google",
+    passport.authenticate(
+        'google', {scope: ["profile", "email"]})
+);
+
+
+app.get("/auth/google/callback",
+    passport.authenticate('google', {
+        failureRedirect: "/login",
+        successRedirect: "/"
+    })
+);
+
+
+app.get("/logout", (req, res) => {
+    req.logOut(() => {
+        res.redirect("/login");
+    });
+});
+
 
 // Start the server
 app.listen(port, () => {
