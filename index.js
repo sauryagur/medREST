@@ -229,6 +229,10 @@ app.post('/appointments/updateStatus', async (req, res) => {
     }
 });
 
+app.get("/login", (req, res) => {
+    res.render('login.ejs');
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

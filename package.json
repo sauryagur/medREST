@@ -1,7 +1,7 @@
 {
   "name": "medREST",
   "version": "1.0.0",
-  "description": "This is the fourth version of the project goddamnit",
+  "description": "This is the fourth version of the projectgit goddamnit",
   "main": "index.js",
   "type": "module",
   "scripts": {
