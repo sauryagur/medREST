@@ -7,6 +7,25 @@
 	},
 	"item": [
 		{
+			"name": "General Testing",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/test",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"test"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Get OPD Appointments",
 			"request": {
 				"method": "GET",
