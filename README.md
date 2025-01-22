@@ -1,4 +1,4 @@
-# Hospital Management System
+# medREST
 
 A comprehensive hospital management system built with Node.js, Express, and PostgreSQL. The system manages
 appointments (OPD/IPD), inventory, bed allocation, and includes Google OAuth authentication.
@@ -117,7 +117,7 @@ The application will be available at `http://localhost:3000`
 
 The application includes special support for API testing with Postman. To authenticate Postman requests:
 
-1. Add the header: `postman-test-secret: iLovePostman`
+1. Add the header: `postman-test-secret: iLovePostman`(or simply import [this](https://github.com/TeamWOMM/medREST_postman/blob/main/medREST%20API%20Testing%20with%20Postman.json) file into Postman collections)
 2. All protected endpoints will return JSON responses when accessed via Postman
 
 Available endpoints:
