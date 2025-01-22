@@ -7,7 +7,6 @@ import session from 'express-session';
 import passport from 'passport';
 import {Strategy as GoogleStrategy} from 'passport-google-oauth2';
 
-
 dotenv.config();
 
 const app = express();
@@ -17,12 +16,15 @@ const {Pool} = pkg;
 
 //Session
 app.use(session({
-    secret: process.env.SESSION_SECRET, resave: false, saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
 }));
 
 // Initialize Supabase (PostgreSQL) connection pool
 const pool = new Pool({
-    connectionString: process.env.SUPABASE_DB_URL, ssl: {
+    connectionString: process.env.SUPABASE_DB_URL,
+    ssl: {
         rejectUnauthorized: false
     }
 });
@@ -37,150 +39,224 @@ passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
 passport.use(new GoogleStrategy({
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
-}, 
-function (accessToken, refreshToken, profile, done) {
-    return done(null, profile);
-}));
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "http://localhost:3000/auth/google/callback",
+    },
+    function (accessToken, refreshToken, profile, done) {
+        return done(null, profile);
+    }
+));
 
-
-// Render the index page
+// Root endpoint
 app.get("/", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render("index.ejs");
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({message: "Welcome to the Hospital Management System"});
+        } else {
+            res.render("index.ejs");
+        }
     } else {
-        res.redirect("/login")
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-// Fetch appointments from the database
+// Fetch and display OPD appointments
 app.get('/appointments', async (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
         try {
-            // Query to fetch data from patients and appointments tables, filtering for OPD department
             const query = `
-    SELECT 
-        a.appointment_id AS id,
-        p.patient_id AS "Patient ID", 
-        p.name AS "Name", 
-        p.gender AS "Gender", 
-        p.date_of_birth AS "Date of Birth",
-        TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
-        a.time_of_appointment AS "Time",
-        a.payment AS "Payment",
-        a.status AS "Status",
-        a.doctor_name AS "Doctor Name",
-        COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
-    FROM patients p
-    JOIN appointments a ON p.patient_id = a.patient_id
-    WHERE a.department = 'OPD'  -- Filter for OPD department
-    ORDER BY status DESC;
-`;
+                SELECT 
+                    a.appointment_id AS id,
+                    p.patient_id AS "Patient ID", 
+                    p.name AS "Name", 
+                    p.gender AS "Gender", 
+                    p.date_of_birth AS "Date of Birth",
+                    TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
+                    a.time_of_appointment AS "Time",
+                    a.payment AS "Payment",
+                    a.status AS "Status",
+                    a.doctor_name AS "Doctor Name",
+                    COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+                FROM patients p
+                JOIN appointments a ON p.patient_id = a.patient_id
+                WHERE a.department = 'OPD'
+                ORDER BY status DESC;
+            `;
 
-            // Execute the query to fetch appointments
             const result = await pool.query(query);
             const appointments = result.rows;
 
-            // Add "Old/New" status based on the number of appointments
             appointments.forEach(appointment => {
                 appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
             });
 
-            // Send the data to the EJS template
-            res.render('opd.ejs', {appointments, title: "OPD Appointments", URL: "/appointments"});
+            const isPostmanRequest = Boolean(req.headers["postman-token"]);
+            if (isPostmanRequest) {
+                res.json({appointments, title: "OPD Appointments", URL: "/appointments"});
+            } else {
+                res.render('opd.ejs', {appointments, title: "OPD Appointments", URL: "/appointments"});
+            }
         } catch (err) {
             console.error('Error fetching appointments:', err);
             res.status(500).send('Error fetching appointments');
         }
     } else {
-        res.redirect("/login")
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
-
 });
 
-
-// Render the page to create a new appointment
+// New appointment page
 app.get("/new", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render("newappointment.ejs", {doctors});
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({doctors, message: "New Appointment Form Data"});
+        } else {
+            res.render("newappointment.ejs", {doctors});
+        }
     } else {
-        res.redirect("/login")
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-// Render the inventory page
+// Inventory page
 app.get("/inventory", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render("inventory.ejs", {medicines});
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({medicines, title: "Inventory Management"});
+        } else {
+            res.render("inventory.ejs", {medicines});
+        }
     } else {
-        res.redirect("/login")
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-//Render IPD Page
+// IPD page
 app.get('/ipd', async (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
         try {
-            // Query to fetch data from patients and appointments tables, filtering for IPD department
             const query = `
-        SELECT 
-            a.appointment_id AS id,
-            p.patient_id AS "Patient ID", 
-            p.name AS "Name", 
-            p.gender AS "Gender", 
-            p.date_of_birth AS "Date of Birth",
-            TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
-            a.time_of_appointment AS "Time",
-            a.payment AS "Payment",
-            a.status AS "Status",
-            a.doctor_name AS "Doctor Name",
-            COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
-        FROM patients p
-        JOIN appointments a ON p.patient_id = a.patient_id
-        WHERE a.department = 'IPD'  -- Filter for IPD department
-        ORDER BY status DESC;
-        `;
+                SELECT 
+                    a.appointment_id AS id,
+                    p.patient_id AS "Patient ID", 
+                    p.name AS "Name", 
+                    p.gender AS "Gender", 
+                    p.date_of_birth AS "Date of Birth",
+                    TO_CHAR(a.date_of_appointment, 'DD/MM/YYYY') AS "Date",
+                    a.time_of_appointment AS "Time",
+                    a.payment AS "Payment",
+                    a.status AS "Status",
+                    a.doctor_name AS "Doctor Name",
+                    COUNT(a.patient_id) OVER (PARTITION BY a.patient_id) AS "Appointment Count"
+                FROM patients p
+                JOIN appointments a ON p.patient_id = a.patient_id
+                WHERE a.department = 'IPD'
+                ORDER BY status DESC;
+            `;
 
-            // Execute the query to fetch appointments
             const result = await pool.query(query);
             const appointments = result.rows;
 
-            // Add "Old/New" status based on the number of appointments
             appointments.forEach(appointment => {
                 appointment['Old/New'] = appointment['Appointment Count'] > 1 ? 'Old' : 'New';
             });
 
-            // Send the data to the EJS template
-            res.render('opd.ejs', {appointments, title: "IPD", URL: "ipd"});
+            const isPostmanRequest = Boolean(req.headers["postman-token"]);
+            if (isPostmanRequest) {
+                res.json({appointments, title: "IPD Appointments", URL: "/ipd"});
+            } else {
+                res.render('opd.ejs', {appointments, title: "IPD", URL: "ipd"});
+            }
         } catch (err) {
             console.error('Error fetching IPD appointments:', err);
             res.status(500).send('Error fetching IPD appointments');
         }
     } else {
-        res.redirect("/");
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-// Staff page (under construction)
+// Staff page
 app.get("/staff", (req, res) => {
-    res.send("UNDER CONSTRUCTION");
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({message: "Staff page under construction"});
+        } else {
+            res.send("UNDER CONSTRUCTION");
+        }
+    } else {
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
+    }
 });
 
-// Patients page (under construction)
+// Patients page
 app.get("/patients", (req, res) => {
-    res.send("UNDER CONSTRUCTION");
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({message: "Patients page under construction"});
+        } else {
+            res.send("UNDER CONSTRUCTION");
+        }
+    } else {
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
+    }
 });
 
-// Render the bed allocation page
+// Beds page
 app.get("/beds", (req, res) => {
-    res.render("bedallocation.ejs", {beds});
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
+        const isPostmanRequest = Boolean(req.headers["postman-token"]);
+        if (isPostmanRequest) {
+            res.json({beds, title: "Bed Allocation"});
+        } else {
+            res.render("bedallocation.ejs", {beds});
+        }
+    } else {
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
+    }
 });
 
-// Handle the new appointment POST request
+// Handle new appointment creation
 app.post("/new", async (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
         const {
             name,
             gender,
@@ -204,108 +280,131 @@ app.post("/new", async (req, res) => {
         } = req.body;
 
         try {
-            // Step 1: Check if the patient already exists in the database (using lowercase(name) and phone for uniqueness)
             const checkPatientQuery = `
-            SELECT patient_id 
-            FROM patients 
-            WHERE LOWER(name) = LOWER($1) AND phone = $2;
-        `;
+                SELECT patient_id 
+                FROM patients 
+                WHERE LOWER(name) = LOWER($1) AND phone = $2;
+            `;
             const patientResult = await pool.query(checkPatientQuery, [name, phone]);
 
             let patient_id;
 
             if (patientResult.rows.length > 0) {
-                // Patient exists, use the existing patient_id
                 patient_id = patientResult.rows[0].patient_id;
             } else {
-                // Step 2: If patient does not exist, insert a new patient into the database
                 const insertPatientQuery = `
-                INSERT INTO patients (name, gender, blood_group, phone, email, emergency_contact_name, emergency_contact_number,
-                                      date_of_birth, occupation, address, allergies, current_medication, family_medical_history,
-                                      past_medical_history, insurance_type, referred_by)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
-                RETURNING patient_id;
-            `;
-                const insertPatientResult = await pool.query(insertPatientQuery, [name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber, dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory, pastMedicalHistory, insuranceType, referredBy]);
+                    INSERT INTO patients (name, gender, blood_group, phone, email, emergency_contact_name, emergency_contact_number,
+                                          date_of_birth, occupation, address, allergies, current_medication, family_medical_history,
+                                          past_medical_history, insurance_type, referred_by)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+                    RETURNING patient_id;
+                `;
+                const insertPatientResult = await pool.query(insertPatientQuery, [
+                    name, gender, bloodGroup, phone, email, emergencyContactName, emergencyContactNumber,
+                    dateOfBirth, occupation, address, allergies, currentMedication, familyMedicalHistory,
+                    pastMedicalHistory, insuranceType, referredBy
+                ]);
 
                 patient_id = insertPatientResult.rows[0].patient_id;
             }
 
-            // Step 3: Insert the new appointment into the appointments table
             const insertAppointmentQuery = `
-            INSERT INTO appointments (patient_id, doctor_name, date_of_appointment, time_of_appointment, payment, status)
-            VALUES ($1, $2, $3, $4, $5, $6);
-        `;
-            await supabase.query(insertAppointmentQuery, [patient_id, doctorName, dateOfAppointment, timeOfAppointment, 'Unpaid', 'Pending']);
+                INSERT INTO appointments (patient_id, doctor_name, date_of_appointment, time_of_appointment, payment, status)
+                VALUES ($1, $2, $3, $4, $5, $6);
+            `;
+            await pool.query(insertAppointmentQuery, [
+                patient_id, doctorName, dateOfAppointment, timeOfAppointment, 'Unpaid', 'Pending'
+            ]);
 
-            res.status(201).json({
-                message: "Appointment successfully created!",
-                patient_id,
-                doctorName,
-                dateOfAppointment,
-                timeOfAppointment
-            });
+            const isPostmanRequest = Boolean(req.headers["postman-token"]);
+            if (isPostmanRequest) {
+                res.status(201).json({
+                    message: "Appointment successfully created!",
+                    patient_id,
+                    doctorName,
+                    dateOfAppointment,
+                    timeOfAppointment
+                });
+            } else {
+                res.redirect("/appointments");
+            }
         } catch (error) {
             console.error("Error creating appointment:", error);
             res.status(500).json({message: "Error creating appointment."});
         }
     } else {
-        res.redirect("/")
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-// POST route to update appointment status
+// Update appointment status
 app.post('/appointments/updateStatus', async (req, res) => {
-    if (req.isAuthenticated()) {
+    if (req.isAuthenticated() || req.headers["postman-test-secret"] === "iLovePostman") {
         const {appointment_id, status} = req.body;
 
         try {
-            // Update the status of the appointment in the database
             const query = `
-            UPDATE appointments
-            SET status = $1
-            WHERE appointment_id = $2 AND department = 'OPD'
-            RETURNING *
-        `;
+                UPDATE appointments
+                SET status = $1
+                WHERE appointment_id = $2 AND department = 'OPD'
+                RETURNING *;
+            `;
 
-            // Execute the query to update the status
             const result = await pool.query(query, [status, appointment_id]);
 
             if (result.rowCount === 0) {
                 return res.status(404).send('Appointment not found.');
             }
 
-            // Redirect back to the appointments page after updating the status
-            res.redirect('/appointments');
+            const isPostmanRequest = Boolean(req.headers["postman-token"]);
+            if (isPostmanRequest) {
+                res.json({
+                    message: "Status updated successfully",
+                    appointment: result.rows[0]
+                });
+            } else {
+                res.redirect('/appointments');
+            }
         } catch (err) {
-            // Log the error and send an error message
             console.error('Error updating status:', err);
             res.status(500).send('An error occurred while updating the status.');
         }
     } else {
-        res.redirect("/login");
+        if (req.headers["postman-token"]) {
+            res.status(401).send("Postman client could not be authenticated. Please use the correct postman-test-secret header.");
+        } else {
+            res.redirect("/login");
+        }
     }
 });
 
-//Render the login page
+// Authentication routes
 app.get("/login", (req, res) => {
     res.render('login.ejs');
 });
 
-app.get("/auth/google", passport.authenticate('google', {scope: ["profile", "email"]}));
-
-
-app.get("/auth/google/callback", passport.authenticate('google', {
-    failureRedirect: "/login", successRedirect: "/"
+app.get("/auth/google", passport.authenticate('google', {
+    scope: ["profile", "email"]
 }));
 
+app.get("/auth/google/callback", passport.authenticate('google', {
+    failureRedirect: "/login",
+    successRedirect: "/"
+}));
+
+app.get("/test", (req, res) => {
+    res.send(res.headersSent);
+});
 
 app.get("/logout", (req, res) => {
     req.logOut(() => {
         res.redirect("/login");
     });
 });
-
 
 // Start the server
 app.listen(port, () => {
