@@ -397,7 +397,7 @@ app.get("/auth/google/callback", passport.authenticate('google', {
 }));
 
 app.get("/test", (req, res) => {
-    res.send(res.headersSent);
+    res.send(req.query);
 });
 
 app.get("/logout", (req, res) => {
@@ -406,6 +406,9 @@ app.get("/logout", (req, res) => {
     });
 });
 
+app.get("*", (req, res) => {
+    res.redirect("/");
+})
 // Start the server
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
