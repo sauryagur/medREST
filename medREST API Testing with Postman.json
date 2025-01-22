@@ -1,0 +1,276 @@
+{
+	"info": {
+		"_postman_id": "97a194ac-6e92-4d9b-9489-ecf337b66559",
+		"name": "medREST API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39481945"
+	},
+	"item": [
+		{
+			"name": "Get OPD Appointments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/appointments",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"appointments"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get IPD Appointments",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/ipd",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ipd"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Inventory",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/inventory",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"inventory"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View Bed Allocation",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:3000/beds",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"beds"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create New Appointment",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "gender",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "bloodGroup",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "phone",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "emergencyContactName",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "emergencyContactNumber",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "dateOfBirth",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "occupation",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "allergies",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "currentMedication",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "familyMedicalHistory",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "pastMedicalHistory",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "insuranceType",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "referredBy",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "doctorName",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "dateOfAppointment",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "timeOfAppointment",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/new",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Appointment Status",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "postman-test-secret",
+						"value": "iLovePostman",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "appointment_id",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "status",
+							"value": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/appointments/updateStatus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"appointments",
+						"updateStatus"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
